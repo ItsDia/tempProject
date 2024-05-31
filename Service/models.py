@@ -22,8 +22,6 @@ class Service(models.Model):
     cost = models.FloatField()
     input_concepts = models.ManyToManyField(Parameter_Concept, related_name='input_services')
     output_concepts = models.ManyToManyField(Parameter_Concept, related_name='output_services')
-    x = models.FloatField(default=300)
-    y = models.FloatField(default=0)
     type = models.ManyToManyField(ServiceType, related_name='services')
 
     def __str__(self):
