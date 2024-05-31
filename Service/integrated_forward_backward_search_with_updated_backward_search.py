@@ -189,38 +189,38 @@ def create_sample_data():
     return initial_concepts, goal_concepts, service_map
 
 
-# Create the sample data
-initial_concepts, goal_concepts, service_map = create_sample_data()
-
-# Execute the forward expansion to build the planning graph
-pg = forward_expand(service_map, initial_concepts, goal_concepts)
-
-# Execute the backward search to find the plan
-backward_search(pg, initial_concepts, goal_concepts)
-
-services_data = []
-
-for service_name, service in service_map.items():
-    # 获取输入和输出概念的集合，并转换为字符串
-    input_concepts_set = service.get_input_concept_set()
-    output_concepts_set = service.get_output_concept_set()
-
-    input_concepts_str = ', '.join(concept.name for concept in input_concepts_set)
-    output_concepts_str = ', '.join(concept.name for concept in output_concepts_set)
-
-    # 创建字典并添加到列表中
-    service_dict = {
-        "name": service_name,
-        "input_concepts": input_concepts_str,
-        "output_concepts": output_concepts_str
-    }
-    services_data.append(service_dict)
-
-# 将字典列表转换为JSON格式的字符串
-json_data = json.dumps(services_data, indent=4)
-
-# 打印JSON格式的数据
-print(json_data)
-
-with open('services.json', 'w') as f:
-    json.dump(services_data, f, indent=4)
+# # Create the sample data
+# initial_concepts, goal_concepts, service_map = create_sample_data()
+#
+# # Execute the forward expansion to build the planning graph
+# pg = forward_expand(service_map, initial_concepts, goal_concepts)
+#
+# # Execute the backward search to find the plan
+# backward_search(pg, initial_concepts, goal_concepts)
+#
+# services_data = []
+#
+# for service_name, service in service_map.items():
+#     # 获取输入和输出概念的集合，并转换为字符串
+#     input_concepts_set = service.get_input_concept_set()
+#     output_concepts_set = service.get_output_concept_set()
+#
+#     input_concepts_str = ', '.join(concept.name for concept in input_concepts_set)
+#     output_concepts_str = ', '.join(concept.name for concept in output_concepts_set)
+#
+#     # 创建字典并添加到列表中
+#     service_dict = {
+#         "name": service_name,
+#         "input_concepts": input_concepts_str,
+#         "output_concepts": output_concepts_str
+#     }
+#     services_data.append(service_dict)
+#
+# # 将字典列表转换为JSON格式的字符串
+# json_data = json.dumps(services_data, indent=4)
+#
+# # 打印JSON格式的数据
+# print(json_data)
+#
+# with open('services.json', 'w') as f:
+#     json.dump(services_data, f, indent=4)
