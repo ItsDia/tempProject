@@ -1,5 +1,5 @@
 import json
-
+import mysql.connector
 
 class Service:
     def __init__(self, name, cost, input_concepts, output_concepts):
@@ -146,37 +146,42 @@ def backward_search(pg, initial_concepts, goal_concepts):
 
 
 def create_sample_data():
-    # Create example services and concepts for a larger graph
-    c1 = Concept("C1")
-    c2 = Concept("C2")
-    c3 = Concept("C3")
-    c4 = Concept("C4")
-    c5 = Concept("C5")
-    c6 = Concept("C6")
-    c7 = Concept("C7")
-    c8 = Concept("C8")
-    c9 = Concept("C9")
-    c10 = Concept("C10")
+    # 创建数据库连接
+    cnx = mysql.connector.connect(user='root', password='@1092345678Cjt',
+                                  host='localhost',
+                                  database='mydb02')
 
-    s1 = Service("S1", 10, [c3, c4], [c1])
-    s2 = Service("S2", 15, [c3], [c2])
-    s3 = Service("S3", 20, [c4, c5], [c6])
-    s4 = Service("S4", 25, [c1, c6], [c7])
-    s5 = Service("S5", 30, [c2, c6], [c8])
-    s6 = Service("S6", 35, [c7, c8], [c9])
-    s7 = Service("S7", 40, [c9], [c10])
+    cursor = cnx.cursor()
 
-    initial_concepts = [c3, c4, c5]
-    goal_concepts = [c10, c9]
-    service_map = {
-        s1.name: s1,
-        s2.name: s2,
-        s3.name: s3,
-        s4.name: s4,
-        s5.name: s5,
-        s6.name: s6,
-        s7.name: s7,
-    }
+    # 从数据库中获取所有的Concept
+    cursor.execute("SELECT name FROM concepts")
+    concepts = [Concept(name) for (name,) in cursor]
+
+    # 创建一个字典，方便后面根据名称查找Concept
+    concept_dict = {concept.name: concept for concept in concepts}
+
+    # 从数据库中获取初始概念
+    cursor.execute("SELECT name FROM initial_concepts")
+    initial_concepts = [concept_dict[name] for (name,) in cursor]
+
+    # 从数据库中获取目标概念
+    cursor.execute("SELECT name FROM goal_concepts")
+    goal_concepts = [concept_dict[name] for (name,) in cursor]
+
+    # 从数据库中获取所有的Service
+    cursor.execute("SELECT name, cost, input_concepts, output_concepts FROM services")
+    services = []
+    for (name, cost, input_concepts, output_concepts) in cursor:
+        input_concepts = [concept_dict[name] for name in input_concepts.split(',')]
+        output_concepts = [concept_dict[name] for name in output_concepts.split(',')]
+        services.append(Service(name, cost, input_concepts, output_concepts))
+
+    # 创建一个字典，方便后面根据名称查找Service
+    service_map = {service.name: service for service in services}
+
+    # 关闭数据库连接
+    cursor.close()
+    cnx.close()
 
     return initial_concepts, goal_concepts, service_map
 
