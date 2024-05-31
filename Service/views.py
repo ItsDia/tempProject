@@ -2,8 +2,10 @@ import random
 
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from Service.form import ServiceNameForm
+from django.http import HttpResponse, JsonResponse
+from django.views.generic import View
+
+from Service.form import ServiceNameForm, ServiceForm
 from Service.integrated_forward_backward_search_with_updated_backward_search import create_sample_data,forward_expand,backward_search
 from Service.models import Service
 
@@ -58,3 +60,17 @@ def search(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'templates/search_service.html', {'page_obj':page_obj})
+
+class ServiceAPI(View):
+    def get(self, request):
+        # 创建样本数据
+        initial_concepts, goal_concepts, service_map = create_sample_data()
+
+        # 执行前向扩展以构建规划图
+        pg = forward_expand(service_map, initial_concepts, goal_concepts)
+
+        # 执行后向搜索以找到计划
+        results = backward_search(pg, initial_concepts, goal_concepts)
+
+        # 返回结果
+        return JsonResponse(results, safe=False)

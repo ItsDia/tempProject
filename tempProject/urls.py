@@ -16,15 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Service.views import create_random_service,search
-
-
+from Service.views import create_random_service, search, ServiceAPI
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('add_services',create_random_service,name='add_services'),
-    path('search',search,name='search')
-
-
-
+    path('api/services/', ServiceAPI.as_view(), name='service_api'),
+    path('create_random_service/', create_random_service, name='create_random_service'),
+    path('search/', search, name='search'),
 ]
