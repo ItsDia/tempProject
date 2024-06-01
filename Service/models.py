@@ -1,4 +1,4 @@
-import django.db as models
+from django.db import models
 
 
 class Parameter_Concept(models.Model):
