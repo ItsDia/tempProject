@@ -45,7 +45,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'myproject.wsgi.application'
+WSGI_APPLICATION = 'tempProject.wsgi.application'
 
 
 # Database
@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydb02',
-        'USER': 'root',
-        'PASSWORD': '@1092345678Cjt',
-        'HOST': 'localhost',
+        'NAME': 'service_com',
+        'USER': 'service_com',
+        'PASSWORD': 'youthol',
+        'HOST': '101.43.91.67',
         'POST': '3306',
     }
 }

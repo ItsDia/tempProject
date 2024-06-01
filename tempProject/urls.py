@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Service.views import ServiceAPI
+from Service import views as view
 
 urlpatterns = [
     path('api/services/', ServiceAPI.as_view(), name='service_api'),
-
+    path('initial/',view.initial),
+    path('composition/', view.composition)
 ]
