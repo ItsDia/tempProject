@@ -151,9 +151,7 @@ def backward_search(pg, initial_concepts, goal_concepts):
 
 def create_sample_data():
     # 创建数据库连接
-    cnx = mysql.connector.connect(user='service_com', password='youthol',
-                                  host='101.43.91.67', port=3306,
-                                  database='service_com')
+    cnx = mysql.connector.connect
 
     cursor = cnx.cursor()
 
