@@ -5,6 +5,6 @@ class Service(models.Model):
     cost = models.IntegerField()
     input_concepts = models.JSONField()
     output_concepts = models.JSONField()
-
+    label = models.CharField(max_length=320, default="")
     def __str__(self):
-        return f"Service(name={self.name}, cost={self.cost}, input_concepts={self.input_concepts}, output_concepts={self.output_concepts}, x={self.x}, y={self.y})"
+        return f"Service(name={self.name}, cost={self.cost}, input_concepts={self.input_concepts}, output_concepts={self.output_concepts}, x={self.x}, y={self.y}, label={self.label})"

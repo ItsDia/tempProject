@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponse
 from .models import Service
 from .integrated_forward_backward_search_with_updated_backward_search import create_sample_data, forward_expand, backward_search
 import random
-
+from django.core import serializers
 class ServiceAPI(View):
     def get(self, request):
         name = request.GET.get('name')
@@ -25,13 +25,13 @@ class ServiceAPI(View):
             services_info = {
                 "userA": {"input": "userN,userFV", "output": "userID"},
                 "vehicleCC": {"input": "vehicleCV", "output": "vehicleID"},
-                "deliveryO": {"input": "userID,vehicleID", "output": "pNname,pPhone,origin,des"},
+                "deliveryO": {"input": "userID,vehicleID", "output": "pName,pPhone,origin,des"},
                 "routeP": {"input": "origin,des", "output": "route,time"},
                 "billing": {"input": "origin,des", "output": "cost"},
                 "exchangeR": {"input": "cost,USD,EUR", "output": "newCost"},
             }
 
-            for i in range(20):
+            for i in range(1):
                 for service_type, concepts in services_info.items():
                     service = Service(
                         name=f"{service_type}_{i}",
@@ -62,13 +62,13 @@ def initial(request):
         services_info = {
             "userA": {"input": "userN,userFV", "output": "userID"},
             "vehicleCC": {"input": "vehicleCV", "output": "vehicleID"},
-            "deliveryO": {"input": "userID,vehicleID", "output": "pNname,pPhone,origin,des"},
+            "deliveryO": {"input": "userID,vehicleID", "output": "pName,pPhone,origin,des"},
             "routeP": {"input": "origin,des", "output": "route,time"},
             "billing": {"input": "origin,des", "output": "cost"},
             "exchangeR": {"input": "cost,USD,EUR", "output": "newCost"},
         }
 
-        for i in range(20):
+        for i in range(1):
             for service_type, concepts in services_info.items():
                 service = Service(
                     name=f"{service_type}_{i}",
@@ -79,9 +79,13 @@ def initial(request):
                 )
                 service.save()
     return HttpResponse("finish")
+
+
 def composition(request):
     # print(request.body)
+    print(request.body)
     json_param = json.loads(request.body.decode())
+
     initial_str = json_param['initial'].split(",")
     goal_str = json_param['goal'].split(",")
 
@@ -92,10 +96,41 @@ def composition(request):
 
 
     # 执行前向扩展以构建规划图
+    print("start fe")
+    # print(service_map)
     pg = forward_expand(service_map, initial_concepts, goal_concepts)
 
+    print("start bs")
     # 执行后向搜索以找到计划
     results = backward_search(pg, initial_concepts, goal_concepts)
 
     # 返回结果
     return JsonResponse(results)
+
+
+def add_new_service(request):
+    json_param = json.loads(request.body.decode())
+    service_name = json_param['name']
+    service_input = json_param['input']
+    service_output = json_param['output']
+    service_type = json_param['type']
+    service_label = json_param['label']
+
+    service = Service(
+        name=service_name,
+        cost=random.randint(1, 100),
+        input_concepts=service_input,
+        output_concepts=service_output,
+        type=service_type,
+        label=service_label
+    )
+    service.save()
+    return HttpResponse("finish")
+
+
+def get_all_service(request):
+    service_info = Service.objects.all()
+
+    service_info_json = serializers.serialize('json', service_info)
+    return JsonResponse(service_info_json, safe=False)
+

@@ -26,22 +26,21 @@ SECRET_KEY = 'django-insecure-&kcpow2ii7*^sr$j-nda40jl3=a2w640s**dm2!%$ycv2$vimb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Service.apps.ServiceConfig'
+    'Service.apps.ServiceConfig',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,6 +49,21 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+
+CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_HEADERS = ('*')
+
+# CORS_ALLOWED_ORIGINS=['*']
+CORS_ALLOWED_ORIGINS=['http://127.0.0.1','http://127.0.0.1:5173','http://localhost:5173',
+                        'https://api.bulbul559.cn', 'https://bulbul559.cn','https://api.youthol.online']
+
+ALLOWED_HOSTS = ['127.0.0.1','127.0.0.1:5173','localhost:5173','api.youthol.online',
+                        'https://api.bulbul559.cn/', 'https://bulbul559.cn/','https://api.youthol.online/']
+
+
 
 ROOT_URLCONF = 'tempProject.urls'
 
@@ -75,6 +89,11 @@ WSGI_APPLICATION = 'tempProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql'
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -85,7 +104,6 @@ DATABASES = {
         'POST': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

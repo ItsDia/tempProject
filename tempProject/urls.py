@@ -22,5 +22,7 @@ from Service import views as view
 urlpatterns = [
     path('api/services/', ServiceAPI.as_view(), name='service_api'),
     path('initial/',view.initial),
-    path('composition/', view.composition)
+    path('composition/', view.composition),
+    path('addNewService/',view.add_new_service),
+    path('getAllService/',view.get_all_service)
 ]

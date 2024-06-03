@@ -8,7 +8,7 @@ class ServiceGraph:
         self.cost = cost
         self.input_concepts = input_concepts
         self.output_concepts = output_concepts
-
+        self.label = ""
     def get_name(self):
         return self.name
 
@@ -21,8 +21,11 @@ class ServiceGraph:
     def get_output_concept_set(self):
         return self.output_concepts
 
+    def get_label(self):
+        return self.label
+
     def __str__(self):
-        return f"Service(name={self.name}, cost={self.cost}, input_concepts={self.input_concepts}, output_concepts={self.output_concepts})"
+        return f"Service(name={self.name}, cost={self.cost}, input_concepts={self.input_concepts}, output_concepts={self.output_concepts}, label={self.label})"
 
 
 class Concept:
@@ -81,6 +84,7 @@ def forward_expand(service_map, initial_concepts, goal_concepts):
 
         for k in a.keys():
             if s.issuperset(a[k].get_input_concept_set()):
+                print(a[k].get_input_concept_set())
                 a_curr.add(a[k])
 
         a_temp.clear()
@@ -107,7 +111,7 @@ def backward_search(pg, initial_concepts, goal_concepts):
     initial = set(initial_concepts)
 
     level = len(pg.a_levels) - 1
-    x = 300  # Initial x value
+    x = 2000  # Initial x value
 
     while level >= 0:
         y = 0  # Reset y value for each level
@@ -131,7 +135,7 @@ def backward_search(pg, initial_concepts, goal_concepts):
         results["service"] = list({v['name']:v for v in results["service"]}.values())  # Remove duplicates
 
         level -= 1
-        x += 100  # Increase x value for each level
+        x -= 100  # Increase x value for each level
 
     # Create links
     for (service1, level1), name1 in service_mapping.items():
@@ -145,16 +149,22 @@ def backward_search(pg, initial_concepts, goal_concepts):
                                 "target": name2
                             })
 
+    results["service"].reverse()
+    results["links"].reverse()
     print("GraphPlan")
     print(results)
     return results
 
 def create_sample_data():
     # 创建数据库连接
-    cnx = mysql.connector.connect(user='service_com', password='youthol',
-                                  host='101.43.91.67', port=3306,
-                                  database='service_com')
-
+    print('execute')
+    cnx = mysql.connector.connect(
+        host='101.43.91.67',         # 数据库主机名，通常是 'localhost' 或者 IP 地址
+        user='service_com',     # 数据库用户名
+        password='youthol', # 数据库密码
+        database='service_com'  # 数据库名称
+    )
+    print('finish connect')
     cursor = cnx.cursor()
 
     # # 从数据库中获取初始概念
@@ -173,21 +183,23 @@ def create_sample_data():
 
         input_str = [name for name in input_concepts.replace('"','').split(',')]
         output_str = [name for name in output_concepts.replace('"','').split(',')]
-        input_concepts = []
-        output_concepts = []
+        s_input_concepts = []
+        s_output_concepts = []
 
         for _str in input_str:
             if _str not in concept_dict:
                 concept_dict[_str] = Concept(_str)
+                s_input_concepts.append(concept_dict[_str])
             else:
-                input_concepts.append(concept_dict[_str])
+                s_input_concepts.append(concept_dict[_str])
 
         for _str in output_str:
             if _str not in concept_dict:
                 concept_dict[_str] = Concept(_str)
+                s_output_concepts.append(concept_dict[_str])
             else:
-                output_concepts.append(concept_dict[_str])
-        services.append(ServiceGraph(name, cost, input_concepts, output_concepts))
+                s_output_concepts.append(concept_dict[_str])
+        services.append(ServiceGraph(name, cost, s_input_concepts, s_output_concepts))
 
     # 创建一个字典，方便后面根据名称查找Service
     service_map = {service.name: service for service in services}
