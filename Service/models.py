@@ -7,4 +7,5 @@ class Service(models.Model):
     output_concepts = models.JSONField()
     label = models.CharField(max_length=320, default="")
     def __str__(self):
-        return f"Service(name={self.name}, cost={self.cost}, input_concepts={self.input_concepts}, output_concepts={self.output_concepts}, x={self.x}, y={self.y}, label={self.label})"
+        #  x={self.x}, y={self.y},
+        return f"Service(name={self.name}, cost={self.cost}, input_concepts={self.input_concepts}, output_concepts={self.output_concepts}, label={self.label})"
