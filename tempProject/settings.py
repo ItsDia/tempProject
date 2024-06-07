@@ -96,12 +96,7 @@ WSGI_APPLICATION = 'tempProject.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'service_com',
-        'USER': 'service_com',
-        'PASSWORD': 'youthol',
-        'HOST': '101.43.91.67',
-        'POST': '3306',
+        'ENGINE': 'django.db.backends.mysql'
     }
 }
 
